@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-operator-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-operator
+  template:
+    metadata:
+      labels:
+        app: python-operator
+    spec:
+      serviceAccountName: k8s-operator
+      containers:
+        - name: python-operator-container
+          image: <your-image-name>:<your-image-tag> # Replace with your image details
+          command: ["python", "k8s_operator.py"] # Replace with your Python script filename
+          env:
+            - name: LOG_LEVEL
+              value: "INFO" # Set your desired log level
+            - name: TEAMS_URL
+              value: "your_teams_url_value" # Replace with your Teams URL value
+            - name: NAMESPACE
+              value: "your_namespace_value" # Replace with your Namespace value
+            - name: LABEL
+              value: "your_label_value" # Replace with your Label value
+            - name: INTERVAL
+              value: "30" # Set your desired interval value (default: 30 seconds)
+      restartPolicy: Always
